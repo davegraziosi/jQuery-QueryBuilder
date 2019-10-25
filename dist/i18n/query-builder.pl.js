@@ -1,5 +1,5 @@
 /*!
- * jQuery QueryBuilder 2.5.2.16
+ * jQuery QueryBuilder 2.5.2-17
  * Locale: Polish (pl)
  * Author: Artur Smolarek
  * Licensed under MIT (https://opensource.org/licenses/MIT)

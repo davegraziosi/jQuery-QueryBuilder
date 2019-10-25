@@ -1,19 +1,28 @@
 /*!
- * jQuery QueryBuilder 2.5.2.16
+ * jQuery QueryBuilder 2.5.2-17
  * Copyright 2014-2019 Damien "Mistic" Sorel (http://www.strangeplanet.fr)
  * Licensed under MIT (https://opensource.org/licenses/MIT)
  */
 (function(root, factory) {
     if (typeof define == 'function' && define.amd) {
-        define(['jquery', 'dot/doT', 'jquery-extendext'], factory);
+        define(['jquery', 'dot/doT', 'jquery-extendext', window], factory);
     }
     else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('jquery'), require('dot/doT'), require('jquery-extendext'));
+        if(root.document){
+            module.exports = factory(require('jquery'), require('dot/doT'), require('jquery-extendext'));
+        } else {
+            module.exports = function( $, window ) {
+				if ( !$ ) {
+					throw new Error( "jQuery QueryBuilder requires a jQuery Instance" );
+				}
+				return factory( $, require('dot/doT'), undefined, window);
+			};
+        }
     }
     else {
-        factory(root.jQuery, root.doT);
+        factory(root.jQuery, root.doT, undefined, window);
     }
-}(this, function($, doT) {
+}(this, function($, doT, ext, window) {
 "use strict";
 
 /**
@@ -5130,22 +5139,27 @@ QueryBuilder.define('not-group', function(options) {
     });
 
     // Parse "NOT" function from sqlparser
-    this.on('parseSQLNode.filter', function(e) {
-        if (e.value.name && e.value.name.toUpperCase() == 'NOT') {
-            e.value = e.value.arguments.value[0];
-
-            // if the there is no sub-group, create one
-            if (['AND', 'OR'].indexOf(e.value.operation.toUpperCase()) === -1) {
-                e.value = new SQLParser.nodes.Op(
-                    self.settings.default_condition,
-                    e.value,
-                    null
-                );
+    if ('SQLParser' in window) {
+        var SQLParser = window.SQLParser;
+        
+        // Bind events
+        this.on('parseSQLNode.filter', function(e) {
+            if (e.value.name && e.value.name.toUpperCase() == 'NOT') {
+                e.value = e.value.arguments.value[0];
+                
+                // if the there is no sub-group, create one
+                if (['AND', 'OR'].indexOf(e.value.operation.toUpperCase()) === -1) {
+                    e.value = new SQLParser.nodes.Op(
+                        self.settings.default_condition,
+                        e.value,
+                        null
+                        );
+                }
+                
+                e.value.not = true;
             }
-
-            e.value.not = true;
-        }
-    });
+        });
+    }
 
     // Request to create sub-group if the "not" flag is set
     this.on('sqlGroupsDistinct.filter', function(e, group, data, i) {
@@ -5961,6 +5975,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
         if (!('SQLParser' in window)) {
             Utils.error('MissingLibrary', 'SQLParser is required to parse SQL queries. Get it here https://github.com/mistic100/sql-parser');
         }
+        var SQLParser = window.SQLParser;
 
         var self = this;
 
@@ -6337,7 +6352,7 @@ QueryBuilder.extend(/** @lends module:plugins.UniqueFilter.prototype */ {
 
 
 /*!
- * jQuery QueryBuilder 2.5.2.16
+ * jQuery QueryBuilder 2.5.2-17
  * Locale: English (en)
  * Author: Damien "Mistic" Sorel, http://www.strangeplanet.fr
  * Licensed under MIT (https://opensource.org/licenses/MIT)
@@ -6413,3 +6428,7 @@ QueryBuilder.defaults({ lang_code: 'en' });
 return QueryBuilder;
 
 }));
+
+
+
+
