@@ -60,22 +60,27 @@ QueryBuilder.define('not-group', function(options) {
     });
 
     // Parse "NOT" function from sqlparser
-    this.on('parseSQLNode.filter', function(e) {
-        if (e.value.name && e.value.name.toUpperCase() == 'NOT') {
-            e.value = e.value.arguments.value[0];
-
-            // if the there is no sub-group, create one
-            if (['AND', 'OR'].indexOf(e.value.operation.toUpperCase()) === -1) {
-                e.value = new SQLParser.nodes.Op(
-                    self.settings.default_condition,
-                    e.value,
-                    null
-                );
+    if ('SQLParser' in window) {
+        var SQLParser = window.SQLParser;
+        
+        // Bind events
+        this.on('parseSQLNode.filter', function(e) {
+            if (e.value.name && e.value.name.toUpperCase() == 'NOT') {
+                e.value = e.value.arguments.value[0];
+                
+                // if the there is no sub-group, create one
+                if (['AND', 'OR'].indexOf(e.value.operation.toUpperCase()) === -1) {
+                    e.value = new SQLParser.nodes.Op(
+                        self.settings.default_condition,
+                        e.value,
+                        null
+                        );
+                }
+                
+                e.value.not = true;
             }
-
-            e.value.not = true;
-        }
-    });
+        });
+    }
 
     // Request to create sub-group if the "not" flag is set
     this.on('sqlGroupsDistinct.filter', function(e, group, data, i) {

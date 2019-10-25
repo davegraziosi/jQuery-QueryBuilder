@@ -1,14 +1,23 @@
 (function(root, factory) {
     if (typeof define == 'function' && define.amd) {
-        define(['jquery', 'dot/doT', 'jquery-extendext'], factory);
+        define(['jquery', 'dot/doT', 'jquery-extendext', window], factory);
     }
     else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('jquery'), require('dot/doT'), require('jquery-extendext'));
+        if(root.document){
+            module.exports = factory(require('jquery'), require('dot/doT'), require('jquery-extendext'));
+        } else {
+            module.exports = function( $, window ) {
+				if ( !$ ) {
+					throw new Error( "jQuery QueryBuilder requires a jQuery Instance" );
+				}
+				return factory( $, require('dot/doT'), undefined, window);
+			};
+        }
     }
     else {
-        factory(root.jQuery, root.doT);
+        factory(root.jQuery, root.doT, undefined, window);
     }
-}(this, function($, doT) {
+}(this, function($, doT, ext, window) {
 "use strict";
 
 @@js
@@ -16,3 +25,7 @@
 return QueryBuilder;
 
 }));
+
+
+
+

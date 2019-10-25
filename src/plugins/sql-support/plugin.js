@@ -473,6 +473,7 @@ QueryBuilder.extend(/** @lends module:plugins.SqlSupport.prototype */ {
         if (!('SQLParser' in window)) {
             Utils.error('MissingLibrary', 'SQLParser is required to parse SQL queries. Get it here https://github.com/mistic100/sql-parser');
         }
+        var SQLParser = window.SQLParser;
 
         var self = this;
 
