@@ -277,7 +277,7 @@
 
 /*!
  * jQuery QueryBuilder 2.5.2-17
- * Copyright 2014-2019 Damien "Mistic" Sorel (http://www.strangeplanet.fr)
+ * Copyright 2014-2020 Damien "Mistic" Sorel (http://www.strangeplanet.fr)
  * Licensed under MIT (https://opensource.org/licenses/MIT)
  */
 (function(root, factory) {
@@ -3450,7 +3450,7 @@ Utils.escapeString = function(value) {
     }
 
     return value
-        .replace(/[\0\n\r\b\\\'\"]/g, function(s) {
+        .replace(/[\0\n\r\b\'\"]/g, function(s) {
             switch (s) {
                 // @formatter:off
             case '\0': return '\\0';
