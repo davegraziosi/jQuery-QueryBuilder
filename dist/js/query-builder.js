@@ -1,8 +1,3 @@
-/*!
- * jQuery QueryBuilder 2.5.0.1
- * Copyright 2014-2017 Damien "Mistic" Sorel (http://www.strangeplanet.fr)
- * Licensed under MIT (http://opensource.org/licenses/MIT)
- */
 /**
  * @typedef {object} Filter
  * @memberof QueryBuilder
@@ -2988,7 +2983,7 @@ Utils.escapeString = function(value) {
     }
 
     return value
-        .replace(/[\0\n\r\b\\\'\"]/g, function(s) {
+        .replace(/[\0\n\r\b\'\"]/g, function(s) {
             switch (s) {
                 // @formatter:off
             case '\0': return '\\0';
@@ -5858,7 +5853,7 @@ QueryBuilder.extend(/** @lends module:plugins.UniqueFilter.prototype */ {
 
 
 /*!
- * jQuery QueryBuilder 2.5.0.1
+ * jQuery QueryBuilder 2.5.0.2
  * Locale: English (en)
  * Author: Damien "Mistic" Sorel, http://www.strangeplanet.fr
  * Licensed under MIT (http://opensource.org/licenses/MIT)
