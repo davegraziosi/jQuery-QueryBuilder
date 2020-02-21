@@ -130,7 +130,7 @@ Utils.escapeString = function(value) {
     }
 
     return value
-        .replace(/[\0\n\r\b\\\'\"]/g, function(s) {
+        .replace(/[\0\n\r\b\'\"]/g, function(s) {
             switch (s) {
                 // @formatter:off
             case '\0': return '\\0';
