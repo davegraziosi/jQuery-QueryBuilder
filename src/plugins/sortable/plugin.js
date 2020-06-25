@@ -31,6 +31,7 @@ QueryBuilder.define('sortable', function(options) {
 
     var autoScrollContainer = options.autoScrollContainer || this.$el[0];
     var autoScrollContainerIsExternal = autoScrollContainer!==this.$el[0];
+    var autoScrollContainerSelector = options.autoScrollContainerSelector;
     // Init drag and drop
     this.on('afterAddRule afterAddGroup', function(e, node) {
         if (node == placeholder) {
@@ -67,7 +68,17 @@ QueryBuilder.define('sortable', function(options) {
                             .addClass('dragging')
                             .css('position','fixed')
                             ;
-
+						var bcr = event.target.getBoundingClientRect();
+                        var x = bcr.x, y=bcr.y;
+                        //console.log("onstart x="+x+" y="+y);
+                        //if(autoScrollContainerIsExternal){
+                            y += (autoScrollContainerSelector ? $(autoScrollContainerSelector).scrollTop() : autoScrollContainer.scrollTop);
+                            x += (autoScrollContainerSelector ? $(autoScrollContainerSelector).scrollLeft() : autoScrollContainer.scrollLeft);
+                            //console.log("onstart scrolled x="+x+" y="+y);
+                        //}
+                        ghost[0].style.top = y + 'px';
+                        ghost[0].style.left = x + 'px';
+                        
                         // create drop placeholder
                         var ph = $('<div class="rule-placeholder">&nbsp;</div>')
                             .height(src.$el.outerHeight());
@@ -81,13 +92,24 @@ QueryBuilder.define('sortable', function(options) {
                         // make the ghost follow the cursor
                         if (ghost && ghost[0]){
 
-                            var x= event.clientX - 15, 
-                            y= event.clientY - 15;
-                            
+                            /*var x= event.clientX - 15, 
+                                y= event.clientY - 15;
+                            */
+                        	var y = ghost[0].style.top;
+                        	var x = ghost[0].style.left;
+                        	y = y.substr(0, y.length - 2);
+                        	x = x.substr(0, x.length - 2);
+                        	//console.log("onmove-start x="+x+" y="+y);
+                        	/*
                             if(autoScrollContainerIsExternal){
                                 y += autoScrollContainer.scrollTop;
                                 x += autoScrollContainer.scrollLeft;
                             }
+                            */
+                            //console.log("onmove-diff dx="+event.dx+" dy="+event.dy);
+                            x = +x + +event.dx;
+                            y = +y + +event.dy;
+                            //console.log("onmove-end x="+x+" y="+y);
                             ghost[0].style.top = y + 'px';
                             ghost[0].style.left = x + 'px';
                         }

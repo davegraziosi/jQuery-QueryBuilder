@@ -1,5 +1,5 @@
 /*!
- * jQuery QueryBuilder 2.5.2-17
+ * jQuery QueryBuilder 2.5.2-19
  * Locale: Brazilian Portuguese (pr-BR)
  * Author: Leandro Gehlen, leandrogehlen@gmail.com; Marcos Ferretti, marcosvferretti@gmail.com
  * Licensed under MIT (https://opensource.org/licenses/MIT)
